@@ -76,6 +76,17 @@ public class ComPortTest {
             if(event.isRXCHAR() && event.getEventValue() > 0) {
                 try {
                     String receivedData = serialPort.readString(event.getEventValue());
+                    String nl = "\n";//String.valueOf(0x0d)+ String.valueOf(0x0a);
+                    if(receivedData.contains(nl)){
+                    	receivedData = receivedData.replace(nl, nl+"newLine\t");
+//                    	System.out.println("\nNEW LINE!!!");
+                    } else {
+//                    	char[] chars = receivedData.toCharArray();
+//                    	for(int i=0; i<chars.length; i++){
+//                    		System.out.print(" "+ getHex(chars[i]));
+//                    	}
+//                    	System.out.println("\n"+receivedData);
+                    }
                     System.out.print(receivedData);
                 }
                 catch (SerialPortException ex) {
@@ -83,5 +94,12 @@ public class ComPortTest {
                 }
             }
         }
+    }
+    
+    private static String getHex(int i)
+    {
+    	String a = "0x";
+    	a+=Integer.toHexString(i);
+    	return a;
     }
 }
