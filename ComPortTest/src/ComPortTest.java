@@ -5,6 +5,7 @@
  */
 
 import java.io.*; // IOException
+import java.text.SimpleDateFormat;
 import java.util.*; // Scanner
 import jssc.*;
 
@@ -70,7 +71,7 @@ public class ComPortTest {
     
     // receiving response from port
     private static class PortReader implements SerialPortEventListener {
-
+    	boolean newLine = false;
         @Override
         public void serialEvent(SerialPortEvent event) {
             if(event.isRXCHAR() && event.getEventValue() > 0) {
@@ -78,16 +79,22 @@ public class ComPortTest {
                     String receivedData = serialPort.readString(event.getEventValue());
                     String nl = "\n";//String.valueOf(0x0d)+ String.valueOf(0x0a);
                     if(receivedData.contains(nl)){
-                    	receivedData = receivedData.replace(nl, nl+"newLine\t");
-//                    	System.out.println("\nNEW LINE!!!");
+                    	int index = receivedData.indexOf(nl);
+                    	if(index == receivedData.length()-1){
+                    		newLine = true; // 줄바꿈으로 끝난 경우, 다음 로그 앞에 시간찍기 위해 flag 셋팅                    		
+                    	} else {
+                    		// 데이터 중간에 줄바꿈이 있는 경우, 여기에 시간을 추가 한다.
+                    		String currTime = getTimeString();
+                        	receivedData = receivedData.replace(nl, nl+currTime+"\t");
+                    	}
                     } else {
-//                    	char[] chars = receivedData.toCharArray();
-//                    	for(int i=0; i<chars.length; i++){
-//                    		System.out.print(" "+ getHex(chars[i]));
-//                    	}
-//                    	System.out.println("\n"+receivedData);
+                    	if(newLine){
+                    		String currTime = getTimeString() + "\t";
+                    		System.out.print(currTime);
+                    		newLine = false;
+                    	}
                     }
-                    System.out.print(receivedData);
+                    System.out.print(receivedData);                    
                 }
                 catch (SerialPortException ex) {
                     System.out.println("Error in receiving response from port: " + ex);
@@ -101,5 +108,13 @@ public class ComPortTest {
     	String a = "0x";
     	a+=Integer.toHexString(i);
     	return a;
+    }
+    
+    private static String getTimeString()
+    {
+    	String value = new String();
+    	SimpleDateFormat format = new SimpleDateFormat("MM.dd.HH:mm:ss.SSS");
+    	value = format.format(new Date());
+    	return value;
     }
 }
