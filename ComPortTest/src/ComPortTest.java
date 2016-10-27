@@ -104,6 +104,7 @@ public class ComPortTest {
 	}
 
 	private static String getTimeString() {
+		// 바꿨는데 왜 안나오지?
 		String value = new String();
 		SimpleDateFormat format = new SimpleDateFormat("MM.dd.HH:mm:ss.SSS");
 		value = format.format(new Date());
