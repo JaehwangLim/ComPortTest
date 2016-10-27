@@ -79,19 +79,19 @@ public class ComPortTest {
 				try {
 					String receivedData = serialPort.readString(event.getEventValue());
 
-					// NEW_LINEÀ» Æ÷ÇÔÇÏ¿© ÅäÅ« ºĞ¸®
+					// NEW_LINEì„ í¬í•¨í•˜ì—¬ í† í° ë¶„ë¦¬
 					StringTokenizer token = new StringTokenizer(receivedData, NEW_LINE, true);
 					while (token.hasMoreTokens()) {
 						String text = token.nextToken();
-						// Á÷Àü¿¡ NEW_LINEÀ» ÂïÀº °æ¿ì, ÇöÀç½Ã°£À» Âï°í, ´ÙÀ½ ³»¿ëÀ» Ãâ·ÂÇÏµµ·Ï ÇÑ´Ù.
-						// Áï, »õ·Î¿î ¶óÀÎÀ» Âï°Ô µÇ´Â °æ¿ì, ¾Õ¿¡ ÇöÀç½Ã°£ Ãâ·Â
+						// ì§ì „ì— NEW_LINEì„ ì°ì€ ê²½ìš°, í˜„ì¬ì‹œê°„ì„ ì°ê³ , ë‹¤ìŒ ë‚´ìš©ì„ ì¶œë ¥í•˜ë„ë¡ í•œë‹¤.
+						// ì¦‰, ìƒˆë¡œìš´ ë¼ì¸ì„ ì°ê²Œ ë˜ëŠ” ê²½ìš°, ì•ì— í˜„ì¬ì‹œê°„ ì¶œë ¥
 						if (newLine) {
 							System.out.print(getTimeString() + "\t");
 							newLine = false;
 						}
-						// text Ãâ·Â
+						// text ì¶œë ¥
 						System.out.print(text);
-						// ¹æ±İ ÂïÀº°Ô NEW_LINE ÀÌ¸é, ´ÙÀ½¿¡ ½Ã°£Ãâ·ÂÀ» À§ÇÑ flag ¼ÂÆÃ
+						// ë°©ê¸ˆ ì°ì€ê²Œ NEW_LINE ì´ë©´, ë‹¤ìŒì— ì‹œê°„ì¶œë ¥ì„ ìœ„í•œ flag ì…‹íŒ…
 						if (text.equals(NEW_LINE)) {
 							newLine = true;
 						}
