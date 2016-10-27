@@ -12,7 +12,6 @@ import jssc.*;
 
 /**
  *
- * @author Emiliarge
  */
 public class ComPortTest {
 
@@ -76,59 +75,32 @@ public class ComPortTest {
 
 		@Override
 		public void serialEvent(SerialPortEvent event) {
-//			System.out.println("start--->");
 			if (event.isRXCHAR() && event.getEventValue() > 0) {
 				try {
 					String receivedData = serialPort.readString(event.getEventValue());
 
-					// if (receivedData.contains(nl)) {
+					// NEW_LINE을 포함하여 토큰 분리
 					StringTokenizer token = new StringTokenizer(receivedData, NEW_LINE, true);
 					while (token.hasMoreTokens()) {
 						String text = token.nextToken();
+						// 직전에 NEW_LINE을 찍은 경우, 현재시간을 찍고, 다음 내용을 출력하도록 한다.
+						// 즉, 새로운 라인을 찍게 되는 경우, 앞에 현재시간 출력
 						if (newLine) {
 							System.out.print(getTimeString() + "\t");
 							newLine = false;
 						}
+						// text 출력
 						System.out.print(text);
+						// 방금 찍은게 NEW_LINE 이면, 다음에 시간출력을 위한 flag 셋팅
 						if (text.equals(NEW_LINE)) {
 							newLine = true;
 						}
 					}
-					// int index = receivedData.indexOf(nl);
-					// int lastIndex = receivedData.lastIndexOf(nl);
-					// if (index != lastIndex) {
-					// // 줄바꿈이 여러개 있음
-					// } else {
-					// if (index == receivedData.length() - 1) {
-					// newLine = true; // 줄바꿈으로 끝난 경우, 다음 로그 앞에 시간찍기 위해
-					// // flag 셋팅
-					// } else {
-					// // 데이터 중간에 줄바꿈이 있는 경우, 여기에 시간을 추가 한다.
-					// String currTime = getTimeString();
-					// receivedData = receivedData.replace(nl, nl + currTime +
-					// "\t");
-					// }
-					// }
-					// } else {
-					// if (newLine) {
-					// String currTime = getTimeString() + "\t";
-					// System.out.print(currTime);
-					// newLine = false;
-					// }
-					// }
-					// System.out.print(receivedData);
 				} catch (SerialPortException ex) {
 					System.out.println("Error in receiving response from port: " + ex);
 				}
 			}
-//			System.out.println("<---end");
 		}
-	}
-
-	private static String getHex(int i) {
-		String a = "0x";
-		a += Integer.toHexString(i);
-		return a;
 	}
 
 	private static String getTimeString() {
